@@ -1,0 +1,18 @@
+<div>
+<div class="w-layout-blockcontainer container-2 w-container">
+<div data-animation="default" data-collapse="small" data-duration="400" data-easing="ease-in-quart" data-easing2="ease" role="banner" class="w-nav">
+<div class="w-container"><a href="#" class="w-nav-brand">
+<h3 class="heading-2">Restoran Homoljski Motivi</h3>
+</a>
+<nav role="navigation" class="w-nav-menu"><a href="#" class="w-nav-link">Home</a>
+<a href="#" class="w-nav-link">About</a><a href="#" class="w-nav-link">Contact</a><a href="#" class="w-nav-link">Link</a>
+</nav><div class="w-nav-button">
+<div class="w-icon-nav-menu"></div></div></div></div></div><section><h1 class="heading-3">
+<span class="text-span-2">Kategorije:</span></h1></section>
+ <section class="section"><div data-w-id="30f1f1a6-f84a-a816-81c0-38e574d577bb" class="w-layout-grid grid">
+<img src="https://assets-global.website-files.com/66413335a09102da6c5071bb/664501bd5fd5be822affc022_predjelo.webp" loading="lazy" id="w-node-_250262c7-7126-5a0b-7872-e05e6301f4a2-6c5071c2" sizes="(max-width: 600px) 100vw, 600px" alt="" srcset="https://assets-global.website-files.com/66413335a09102da6c5071bb/664501bd5fd5be822affc022_predjelo-p-500.webp 500w, https://assets-global.website-files.com/66413335a09102da6c5071bb/664501bd5fd5be822affc022_predjelo.webp 600w" class="image"/><div id="w-node-c48de496-6778-5ecf-6fa2-742d46911b1d-6c5071c2" class="text-block-3"><span class="text-span-3">Predjela</span></div></div>
+<div class="w-layout-grid grid">
+<img src="https://assets-global.website-files.com/66413335a09102da6c5071bb/664501bd0f0d1353cf4ed2a0_glavno.jpg" loading="lazy" id="w-node-_04eee815-0d97-64cc-acb7-6f4f9f6b6fbc-6c5071c2" sizes="(max-width: 1200px) 100vw, 1200px" alt="" srcset="https://assets-global.website-files.com/66413335a09102da6c5071bb/664501bd0f0d1353cf4ed2a0_glavno-p-500.jpg 500w, https://assets-global.website-files.com/66413335a09102da6c5071bb/664501bd0f0d1353cf4ed2a0_glavno-p-800.jpg 800w, https://assets-global.website-files.com/66413335a09102da6c5071bb/664501bd0f0d1353cf4ed2a0_glavno-p-1080.jpg 1080w, https://assets-global.website-files.com/66413335a09102da6c5071bb/664501bd0f0d1353cf4ed2a0_glavno.jpg 1200w" class="image"/><div id="w-node-_6eea2113-757d-0356-2a42-a7f2cbf604e6-6c5071c2" class="text-block-3"><span class="text-span-3">Glavna Jela </span></div></div><div class="w-layout-grid grid"><img src="https://assets-global.website-files.com/66413335a09102da6c5071bb/664501bd0bbc054d056deb04_bezalkoholno.png" loading="lazy" id="w-node-_81aa62ef-c6b5-75a9-5cc4-95c482e97bd6-6c5071c2" alt="" class="image"/><div id="w-node-c33dbe5b-0770-1942-795c-e1544b1203cc-6c5071c2" class="text-block-3"><span class="text-span-3">Bezalkoholna pica</span></div>
+</div><div class="w-layout-grid grid">
+<img src="https://assets-global.website-files.com/66413335a09102da6c5071bb/664501bd3f1ae939142971ef_zestoka.png" loading="lazy" id="w-node-eb7c381b-cc35-771e-af91-511ccabeb3ef-6c5071c2" sizes="(max-width: 616px) 100vw, 616px" alt="" srcset="https://assets-global.website-files.com/66413335a09102da6c5071bb/664501bd3f1ae939142971ef_zestoka-p-500.png 500w, https://assets-global.website-files.com/66413335a09102da6c5071bb/664501bd3f1ae939142971ef_zestoka.png 616w" class="image"/><div id="w-node-_64af59a0-7579-94fd-a52f-4fe635cd03b0-6c5071c2" class="text-block-3"><span class="text-span-3">Zestoka pica</span></div></div></section><script src="https://d3e54v103j8qbb.cloudfront.net/js/jquery-3.5.1.min.dc5e7f18c8.js?site=66413335a09102da6c5071bb" type="text/javascript" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+</div>
