@@ -14,8 +14,7 @@ class User extends Authenticatable implements FilamentUser
     public function canAccessPanel(Panel $panel): bool
     {
         
- 
-        return true;
+        return $this->admin; // Provera da li je korisnik admin
     }
     /**
      * The attributes that are mass assignable.
@@ -26,6 +25,7 @@ class User extends Authenticatable implements FilamentUser
         'name',
         'email',
         'password',
+        'admin',
     ];
 
     /**
@@ -48,6 +48,7 @@ class User extends Authenticatable implements FilamentUser
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'admin'=> 'boolean',
         ];
     }
 }

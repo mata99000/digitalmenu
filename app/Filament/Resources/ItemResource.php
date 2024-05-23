@@ -13,19 +13,37 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\Storage; 
+use App\Models\Subcategory;
+use App\Models\Category;
 
 class ItemResource extends Resource
 {
     protected static ?string $model = Item::class;
+    protected static ?string $navigationGroup = 'Upravljanje jelovnikom';
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationLabel = 'Stavke jelovnika';
+    protected static ?string $navigationIcon = 'heroicon-s-building-storefront';
 
     public static function form(Form $form): Form
     {
         return $form
         ->schema([
             Forms\Components\Select::make('category_id')
-                ->relationship('category', 'name')
+                ->label('Category')
+                ->options(Category::all()->pluck('name', 'id'))
+                ->reactive()
+                ->required()
+                ->afterStateUpdated(fn (callable $set) => $set('subcategory_id', null)),
+
+                Forms\Components\Select::make('subcategory_id')
+                ->label('Subcategory')
+                ->options(function (callable $get) {
+                    $categoryId = $get('category_id');
+                    if ($categoryId) {
+                        return Subcategory::where('category_id', $categoryId)->pluck('name', 'id');
+                    }
+                    return Subcategory::all()->pluck('name', 'id');
+                })
                 ->required(),
             Forms\Components\TextInput::make('name')
                 ->required()
@@ -38,8 +56,8 @@ class ItemResource extends Resource
             Forms\Components\FileUpload::make('image')
                 ->image()
                 ->disk('public')
-                ->directory('item-images')
-                ->required(),
+                ->directory('item-images'),
+                
         ]);
     }
 
@@ -48,7 +66,8 @@ class ItemResource extends Resource
         return $table
         ->columns([
             Tables\Columns\TextColumn::make('name'),
-            Tables\Columns\TextColumn::make('category.name')->label('Category'),
+            Tables\Columns\TextColumn::make ('subcategory.category.name')->label('Category'),
+            Tables\Columns\TextColumn::make('subcategory.name')->label('Subcategory'),
             Tables\Columns\TextColumn::make('description'),
             Tables\Columns\TextColumn::make('price'),
             Tables\Columns\ImageColumn::make('image')

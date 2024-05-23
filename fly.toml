@@ -1,9 +1,9 @@
-# fly.toml app configuration file generated for digitalmenu on 2024-05-23T06:08:46-07:00
+# fly.toml app configuration file generated for digitalmenu-storage on 2024-05-23T08:34:40-07:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = 'digitalmenu'
+app = 'digitalmenu-storage'
 primary_region = 'ams'
 console_command = 'php /var/www/html/artisan tinker'
 
@@ -14,7 +14,6 @@ console_command = 'php /var/www/html/artisan tinker'
 
 [env]
   APP_ENV = 'production'
-  APP_URL = 'https://digitalmenu.fly.dev/'
   LOG_CHANNEL = 'stderr'
   LOG_LEVEL = 'info'
   LOG_STDERR_FORMATTER = 'Monolog\Formatter\JsonFormatter'
@@ -33,3 +32,7 @@ console_command = 'php /var/www/html/artisan tinker'
   memory = '1gb'
   cpu_kind = 'shared'
   cpus = 1
+
+[mounts]
+source = "storage_dir"
+destination = "/var/www/html/storage" 
