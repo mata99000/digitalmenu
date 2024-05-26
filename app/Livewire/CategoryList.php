@@ -6,9 +6,15 @@ use Livewire\Component;
 
 class CategoryList extends Component
 {
+    public $categories;
+
+    public function mount()
+    {
+        $this->categories = Category::all();
+    }
     public function render()
     {
         $categories = Category::all();
-        return view('livewire.category-list', compact('categories'))->layout('layouts.main');
+        return view('livewire.category-list')->layout('layouts.main');
     }
 }
