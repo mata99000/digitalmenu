@@ -3,11 +3,15 @@
 use Illuminate\Support\Facades\Route;
 use App\Livewire\CategoryList;
 use App\Livewire\ItemList;
+use App\Livewire\CategoryItems;
 
-Route::get('/categories', CategoryList::class)->name('categories');
-Route::get('/categories/{categoryId}/items', ItemList::class)->name('category.items');
-Route::view('/', 'welcome');
+Route::get('/', function () {
+    return view('categories.index');
+});
 
+Route::get('/categories/{id}', function ($id) {
+    return view('categories.show', ['id' => $id]);
+});
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
