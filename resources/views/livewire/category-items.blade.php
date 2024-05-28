@@ -16,7 +16,7 @@
                                         <h4 class="heading-6">{{ $item->name }}</h4>
                                         <div id="w-node-_12538e8e-8289-bb8b-e290-deb294293e81-879c8c16" class="text-block-5">{{ $item->comment }}</div>
                                     </div>
-                                    <h4 id="w-node-e9f677ae-3b19-3ca3-c05e-5fa9a165e7c9-879c8c16" class="heading-6">{{ $item->price }}.00</h4>
+                                    <h4 id="w-node-e9f677ae-3b19-3ca3-c05e-5fa9a165e7c9-879c8c16" class="heading-6">{{ $item->price }}</h4>
                                 </div>
                             @endforeach
                         </div>
