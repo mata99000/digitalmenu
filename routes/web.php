@@ -4,6 +4,9 @@ use Illuminate\Support\Facades\Route;
 use App\Livewire\CategoryList;
 use App\Livewire\ItemList;
 use App\Livewire\CategoryItems;
+use App\Livewire\Test;
+
+Route::get('/test', Test::class);
 
 Route::get('/', function () {
     return view('categories.index');
