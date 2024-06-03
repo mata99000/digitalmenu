@@ -5,7 +5,9 @@ use App\Livewire\CategoryList;
 use App\Livewire\ItemList;
 use App\Livewire\CategoryItems;
 use App\Livewire\Test;
+use App\Livewire\OrderForm;
 
+Route::get('/order', OrderForm::class)->name('order.form')->middleware('waiter');
 Route::get('/test', Test::class);
 
 Route::get('/', function () {
