@@ -6,6 +6,9 @@ use App\Livewire\ItemList;
 use App\Livewire\CategoryItems;
 use App\Livewire\Test;
 use App\Livewire\OrderForm;
+use App\Livewire\ItemPanel; // Pretpostavljam da je vaš Livewire komponent nazvan ItemPanel
+
+Route::get('/test-order-panel', ItemPanel::class)->name('test.order.panel');
 
 Route::get('/order', OrderForm::class)->name('order.form')->middleware('waiter');
 Route::get('/test', Test::class);

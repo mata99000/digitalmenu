@@ -6,7 +6,7 @@ use Livewire\Component;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Item; // Ako postoji model za stavke
-
+use App\Events\OrderCreated;
 class OrderForm extends Component
 {
     public $items;
@@ -17,7 +17,15 @@ class OrderForm extends Component
         $this->items = Item::all();
         $this->initSelectedItems();
     }
-
+    public function calculateTotal()
+    {
+        $total = 0;
+        foreach ($this->selectedItems as $item) {
+            $total += $item['quantity'] * $item['price'];
+        }
+        return $total;
+    }
+    
     private function initSelectedItems()
     {
         foreach ($this->items as $item) {
@@ -38,9 +46,19 @@ class OrderForm extends Component
             $this->selectedItems[$itemId]['quantity'] = 1;
         }
     }
-
+    public function removeItem($itemId)
+    {
+        if (isset($this->selectedItems[$itemId])) {
+            unset($this->selectedItems[$itemId]);
+        }
+    }
+    
     public function addOrder()
     {
+        if (array_sum(array_column($this->selectedItems, 'quantity')) === 0) {
+            session()->flash('error', 'Narudžbina ne može biti prazna!');
+            return;
+        }
         $order = new Order();
         $order->waiter_id = auth()->id();
         $order->total = array_sum(array_map(function ($item) {
@@ -59,7 +77,7 @@ class OrderForm extends Component
                 $orderItem->save();
             }
         }
-
+        event(new OrderCreated($order));
         $this->reset('selectedItems');
         $this->initSelectedItems();
         session()->flash('message', 'Order successfully submitted!');
