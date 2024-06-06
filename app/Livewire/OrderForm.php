@@ -54,35 +54,47 @@ class OrderForm extends Component
     }
     
     public function addOrder()
-    {
-        if (array_sum(array_column($this->selectedItems, 'quantity')) === 0) {
-            session()->flash('error', 'Narudžbina ne može biti prazna!');
-            return;
-        }
-        $order = new Order();
-        $order->waiter_id = auth()->id();
-        $order->total = array_sum(array_map(function ($item) {
-            return $item['quantity'] * $item['price'];
-        }, $this->selectedItems));
-        $order->status = 'pending';
-        $order->save();
-
-        foreach ($this->selectedItems as $item) {
-            if ($item['quantity'] > 0) {
-                $orderItem = new OrderItem();
-                $orderItem->order_id = $order->id;
-                $orderItem->item_id = $item['id'];
-                $orderItem->quantity = $item['quantity'];
-                $orderItem->price = $item['price'];
-                $orderItem->save();
-            }
-        }
-        event(new OrderCreated($order));
-        $this->reset('selectedItems');
-        $this->initSelectedItems();
-        session()->flash('message', 'Order successfully submitted!');
+{
+    // Proverava da li je order prazan 
+    if (array_sum(array_column($this->selectedItems, 'quantity')) === 0) {
+        session()->flash('error', 'Narudžbina ne može biti prazna!');
+        return;
     }
 
+    $order = new Order();
+    $order->waiter_id = auth()->id();
+    $order->total = array_sum(array_map(function ($item) {
+        return $item['quantity'] * $item['price'];
+    }, $this->selectedItems));
+    $order->status = 'pending';
+    $order->save();
+
+    foreach ($this->selectedItems as $item) {
+        if ($item['quantity'] > 0) {
+            $orderItem = new OrderItem();
+            $orderItem->order_id = $order->id;
+            $orderItem->item_id = $item['id'];
+            $orderItem->quantity = $item['quantity'];
+            $orderItem->price = $item['price'];
+            $orderItem->save();
+        }
+    }
+
+    $order->load('orderItems.item');
+
+    $containsFood = $order->orderItems->contains(function ($orderItem) {
+        return $orderItem->item->type == 'food';
+    });
+
+    if ($containsFood) {
+        // Emitirajte događaj samo ako narudžba sadrži stavke tipa "food"
+        event(new OrderCreated($order));
+    }
+
+    $this->reset('selectedItems');
+    $this->initSelectedItems();
+    session()->flash('message', 'Order successfully submitted!');
+}
     public function render()
     {
         return view('livewire.order-form')->layout('layouts.order');

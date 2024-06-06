@@ -20,36 +20,17 @@
 </style>
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+        @livewireStyles
     </head>
     <body>
-        
-        <div id="orders-container"></div>
-<script>document.addEventListener('DOMContentLoaded', function() {
-    window.Echo.channel('order-channel')
-        .listen('OrderCreated', (e) => {
-            const ordersContainer = document.getElementById('orders-container');
-            if (ordersContainer) {  // Corrected variable name here
-                const orderElement = document.createElement('div');
-                orderElement.classList.add('order-block');
-
-                let itemsHtml = '';
-                e.order.items.forEach(item => {
-                    itemsHtml += `<p>${item.name} - Quantity: ${item.quantity}</p>`;
-                });
-
-                orderElement.innerHTML = `
-                    <h4>Order ID: ${e.order.id}</h4>
-                    ${itemsHtml}
-                    <hr>
-                `;
-
-                ordersContainer.appendChild(orderElement);
-            } else {
-                console.error('Orders container not found');  // Proper error handling
-            }
-        });
-});
-</script>
+        @livewire('kitchen-orders')
+        <div id="orders-container">
+            <!-- Narudžbine će biti dodate ovde dinamički -->
+        </div>
+       
+     <!-- resources/views/livewire/kitchen-orders.blade.php -->
+    
+        @livewireScripts
     </body>
    
 </html>

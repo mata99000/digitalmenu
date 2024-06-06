@@ -16,7 +16,10 @@ class Order extends Model
     {
         return $this->belongsTo(Waiter::class);  // Pretpostavljajući da postoji model Waiter
     }
-
+    public function orderItems()  // Ensure the function name matches the relationship name you are trying to access
+    {
+        return $this->hasMany(\App\Models\OrderItem::class);
+        }
     public function items()
     {
         return $this->hasMany(OrderItem::class);

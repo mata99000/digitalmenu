@@ -4,9 +4,3 @@ import './bootstrap';
 
 
   
-
-Echo.channel('order-channel')
-    .listen('OrderCreated', (event) => {
-        console.log('Received data:', event);
-        // existing code to handle the event
-    });
