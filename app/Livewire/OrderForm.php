@@ -25,7 +25,19 @@ class OrderForm extends Component
         }
         return $total;
     }
-    
+    public function updateItemQuantity($itemId, $newQuantity)
+{
+    foreach ($this->selectedItems as $index => $item) {
+        if ($item['id'] == $itemId) {
+            if ($newQuantity <= 0) {
+                unset($this->selectedItems[$index]); // Uklonite artikal ako je količina 0 ili manje
+            } else {
+                $this->selectedItems[$index]['quantity'] = $newQuantity; // Ažurirajte količinu
+            }
+        }
+    }
+}
+
     private function initSelectedItems()
     {
         foreach ($this->items as $item) {
