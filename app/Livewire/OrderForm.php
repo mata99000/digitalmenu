@@ -89,6 +89,8 @@ class OrderForm extends Component
     if ($containsFood) {
         // Emitirajte događaj samo ako narudžba sadrži stavke tipa "food"
         event(new OrderCreated($order));
+        $this->dispatch('play-sound'); // Emitovanje browser eventa koji će okinuti zvuk
+
     }
 
     $this->reset('selectedItems');

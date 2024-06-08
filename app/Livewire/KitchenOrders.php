@@ -11,13 +11,11 @@ use Livewire\Attributes\On;
 class KitchenOrders extends Component
 {
     public $orders = [];
-    protected $listeners = [
-        'echo:orders,OrderCreated' => 'addOrder',
-        'echo:orders,OrderUpdated' => 'loadOrders',
-        'orderUpdated' => 'removeOrder'
-    ];
 
-
+    public function mount()
+    {
+        $this->loadOrders();
+    }
     #[On('order-updated')]
     public function removeOrder($orderId)
     {
@@ -25,11 +23,8 @@ class KitchenOrders extends Component
             return $order->id !== $orderId;
         });
     }
-    public function mount()
-    {
-        $this->loadOrders();
-    }
     
+    #[On('order-created')]
     public function loadOrders()
 {
     // Učitava narudžbe koje imaju 'pending' status i sadrže stavke tipa 'food'
@@ -43,7 +38,14 @@ class KitchenOrders extends Component
         });
     }, 'orderItems.item'])
     ->get();
+    
 }
+public function orderCreated(Order $order)
+{
+    $this->orders->prepend($order);
+    $this->emitTo('kitchen-orders', 'orderCreated', $order);
+}
+
 public function updateOrder($orderData)
 {
     // Filtrirajte narudžbe kako biste uklonili one koje su označene kao dovršene
@@ -51,21 +53,25 @@ public function updateOrder($orderData)
         return $order['id'] !== $orderData['id'];
     });
 }
-public function addOrder($orderData)
-    {
-        if (!isset($orderData['order_items']) || !is_array($orderData['order_items'])) {
-            return;
-        }
 
-        $order = new Order($orderData);
-        $order->orderItems = collect($orderData['order_items'])->map(function ($item) {
-            $orderItem = new OrderItem($item);
-            $orderItem->item = new Item($item['item']);
-            return $orderItem;
-        });
-
-        $this->orders->push($order);
+public function addOrder($data)
+{
+    $orderId = $data['order']['id'] ?? null;
+    if (!$orderId) {
+        logger('Order ID not set or invalid:', $data);
+        return;
     }
+
+    $order = Order::with('orderItems.item') // Učitajte order sa svim potrebnim relationships
+                  ->find($orderId);
+
+    if ($order && $order->status == 'pending') {
+        $this->orders->prepend($order);
+        $this->orders = $this->orders->values(); // Ažurirajte indekse ako je $this->orders kolekcija
+    }
+}
+
+
     public function completeOrder($orderId)
 {
     $order = Order::find($orderId);
