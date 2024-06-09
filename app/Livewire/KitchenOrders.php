@@ -16,6 +16,7 @@ class KitchenOrders extends Component
     {
         $this->loadOrders();
     }
+    
     #[On('order-updated')]
     public function removeOrder($orderId)
     {
@@ -26,20 +27,27 @@ class KitchenOrders extends Component
     
     #[On('order-created')]
     public function loadOrders()
-{
-    // Učitava narudžbe koje imaju 'pending' status i sadrže stavke tipa 'food'
-    $this->orders = Order::where('status', 'pending')
-    ->whereHas('orderItems.item', function($query) {
-        $query->where('type', 'food');
-    })
-    ->with(['orderItems' => function($query) {
-        $query->whereHas('item', function($q) {
-            $q->where('type', 'food');
-        });
-    }, 'orderItems.item'])
-    ->get();
+    {
+        $this->orders = Order::where('status', 'pending')
+
+       
+        ->orderBy('created_at', 'desc')  // Sortiranje narudžbina prema datumu kreiranja
+        ->get();
+        // Učitava narudžbe koje imaju 'pending' ili 'completed_bar' status
+        $this->orders = Order::whereIn('status', ['pending', 'completed_bar'])
+        ->whereHas('orderItems.item', function($query) {
+            $query->where('type', 'food');
+        })
+        ->with(['orderItems' => function($query) {
+            $query->whereHas('item', function($q) {
+                $q->where('type', 'food');
+            });
+        }, 'orderItems.item'])
+                             ->orderBy('created_at', 'desc')  // Pretpostavljam da želite sortiranje po datumu kreiranja narudžbine
+                             ->get();
+    }
     
-}
+
 public function orderCreated(Order $order)
 {
     $this->orders->prepend($order);

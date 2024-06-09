@@ -72,7 +72,8 @@ class OrderForm extends Component
         session()->flash('error', 'Narudžbina ne može biti prazna!');
         return;
     }
-
+    
+    
     $order = new Order();
     $order->waiter_id = auth()->id();
     $order->total = array_sum(array_map(function ($item) {
@@ -97,14 +98,19 @@ class OrderForm extends Component
     $containsFood = $order->orderItems->contains(function ($orderItem) {
         return $orderItem->item->type == 'food';
     });
+    $containsDrink = $order->orderItems->contains(function ($orderItem) {
+        return $orderItem->item->type == 'drink';
+    });
+    
 
     if ($containsFood) {
         // Emitirajte događaj samo ako narudžba sadrži stavke tipa "food"
-        event(new OrderCreated($order));
-        $this->dispatch('play-sound'); // Emitovanje browser eventa koji će okinuti zvuk
-
+        broadcast(new OrderCreated($order))->toOthers();
     }
-
+    if ($containsDrink) {
+        // Emitirajte događaj samo ako narudžba sadrži stavke tipa "drink"
+        broadcast(new OrderCreated($order))->toOthers();
+    }
     $this->reset('selectedItems');
     $this->initSelectedItems();
     session()->flash('message', 'Order successfully submitted!');

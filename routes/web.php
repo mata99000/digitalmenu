@@ -1,5 +1,6 @@
 <?php
 
+use App\Livewire\BarOrders;
 use App\Livewire\KitchenOrders;
 use Illuminate\Support\Facades\Route;
 use App\Livewire\CategoryList;
@@ -10,6 +11,7 @@ use App\Livewire\OrderForm;
 use App\Livewire\ItemPanel; // Pretpostavljam da je vaš Livewire komponent nazvan ItemPanel
 
 Route::get('/kitchen', KitchenOrders::class)->name('kitchen.panel');
+Route::get('/bar', BarOrders::class)->name('bar.panel');
 
 Route::get('/order', OrderForm::class)->name('order.form')->middleware('waiter');
 Route::get('/test', Test::class);

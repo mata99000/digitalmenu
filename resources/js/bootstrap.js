@@ -13,6 +13,7 @@ window.Echo = new Echo({
     enabledTransports: ['ws', 'wss'],
 });
 
+
 import './echo';
 
 import axios from 'axios';
