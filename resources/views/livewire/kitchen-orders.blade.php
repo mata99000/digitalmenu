@@ -95,6 +95,36 @@
                 ].join(' ');
             }
         }
+        
     }
+    document.addEventListener('DOMContentLoaded', function () {
+    window.Echo.channel('orders')
+        .listen('OrderCreated', (e) => {
+            console.log('Complete event data:', e);
+            console.log('Order ID being sent:', e.order.id);
+            window.Livewire.dispatch('order-created', { orderId: e.order.id });
+
+            // Provera tipa stavki u narudžbi
+            let containsFood = false;
+            let containsDrink = false;
+            
+            e.order.order_items.forEach(item => {
+                if (item.item.type === 'food') {
+                    containsFood = true;
+                } else if (item.item.type === 'drink') {
+                    containsDrink = true;
+                }
+            });
+
+            // Reprodukovanje zvuka za hranu
+           
+            // Reprodukovanje zvuka za piće
+            if (containsFood) {
+                let audioFood = new Audio('/audio/beep.mp3');
+                audioFood.play().catch(error => console.log("Error playing the food sound:", error));
+            }
+        });
+});
+
     </script>
 </div>
