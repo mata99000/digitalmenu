@@ -17,6 +17,6 @@ class ItemOption extends Model
 
     public function price()
     {
-        return $this->hasOne(OptionPrice::class);
-    }
+        return $this->hasMany(OptionPrice::class, 'option_id');
+        }
 }
