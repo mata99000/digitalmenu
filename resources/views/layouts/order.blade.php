@@ -14,6 +14,8 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body>
+        @livewire('category-products')
+
         @livewire('order-form')
 
     </body>

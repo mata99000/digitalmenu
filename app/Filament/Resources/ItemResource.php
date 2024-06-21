@@ -6,6 +6,7 @@ use App\Filament\Resources\ItemResource\Pages;
 use App\Filament\Resources\ItemResource\RelationManagers;
 use App\Models\Item;
 use Filament\Forms;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -52,6 +53,14 @@ class ItemResource extends Resource
             Forms\Components\TextInput::make('price')
                 ->required()
                 ->numeric(),
+                Select::make('type')
+                ->label('Type')
+                ->options([
+                    'food' => 'Food',
+                    'drink' => 'Drink',
+                ])
+                ->required(),
+
             Forms\Components\Textarea::make('comment'),
             Forms\Components\FileUpload::make('image')
                 ->image()
@@ -70,9 +79,9 @@ class ItemResource extends Resource
             Tables\Columns\TextColumn::make('subcategory.name')->label('Subcategory'),
             Tables\Columns\TextColumn::make('description'),
             Tables\Columns\TextColumn::make('price'),
-            Tables\Columns\ImageColumn::make('image')
-                ->disk('public')
-                ->url(fn ($record) => Storage::url($record->image)),
+            Tables\Columns\TextColumn::make('type'),
+
+           
         ])
             ->filters([
                 //
@@ -100,6 +109,7 @@ class ItemResource extends Resource
             'index' => Pages\ListItems::route('/'),
             'create' => Pages\CreateItem::route('/create'),
             'edit' => Pages\EditItem::route('/{record}/edit'),
+            
         ];
     }
 }

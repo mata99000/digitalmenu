@@ -9,7 +9,10 @@ class Item extends Model
 {
     use HasFactory;
     protected $fillable = ['category_id', 'subcategory_id', 'name', 'description', 'price', 'comment', 'image' , 'type'];
-
+    public function options()
+    {
+        return $this->hasMany(ItemOption::class);
+    }
     public function category()
     {
         return $this->belongsTo(Category::class);

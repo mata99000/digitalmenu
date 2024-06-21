@@ -20,4 +20,8 @@ class OrderItem extends Model
     {
         return $this->belongsTo(Item::class);  // Pretpostavljajući da postoji model Item
     }
+    public function orderItemoptions()
+    {
+        return $this->hasMany(OrderItemOption::class);
+    }
 }

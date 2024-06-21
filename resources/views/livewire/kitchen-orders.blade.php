@@ -8,9 +8,20 @@
                     <ul class="mb-4">
                         @foreach ($order->orderItems as $item)
                             @if ($item->item->type === 'food')
-                                <li class="flex justify-between items-center py-2">
-                                    <span>{{ $item->item->name }}</span>
-                                    <span class="text-gray-500">x{{ $item->quantity }}</span>
+                                <li class="flex flex-col py-2">
+                                    <div class="flex justify-between items-center">
+                                        <span>{{ $item->item->name }}</span>
+                                        <span class="text-gray-500">x{{ $item->quantity }}</span>
+                                    </div>
+                                    @if ($item->orderItemOptions->isNotEmpty())
+                                        <ul class="pl-4">
+                                            @foreach ($item->orderItemOptions as $option)
+                                                <li class="{{ $option->option->type === 'add' ? 'text-green-500' : 'text-red-500' }}">
+                                                    {{ $option->option->name }}
+                                                </li>
+                                            @endforeach
+                                        </ul>
+                                    @endif
                                 </li>
                             @endif
                         @endforeach
@@ -28,7 +39,7 @@
                 </div>
             </div>
         @endforeach
-    
+
         <!-- Modal for Confirmation -->
         <div x-show="showModal" style="background-color: rgba(0, 0, 0, 0.5);" class="fixed inset-0 flex items-center justify-center">
             <div class="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full">
@@ -60,10 +71,7 @@
         </div>
     </div>
     
-    
-
-
-<script>
+    <script>
     function orderTimer() {
         return {
             showModal: false,
@@ -95,36 +103,30 @@
                 ].join(' ');
             }
         }
-        
     }
     document.addEventListener('DOMContentLoaded', function () {
-    window.Echo.channel('orders')
-        .listen('OrderCreated', (e) => {
-            console.log('Complete event data:', e);
-            console.log('Order ID being sent:', e.order.id);
-            window.Livewire.dispatch('order-created', { orderId: e.order.id });
+        window.Echo.channel('orders')
+            .listen('OrderCreated', (e) => {
+                console.log('Complete event data:', e);
+                console.log('Order ID being sent:', e.order.id);
+                window.Livewire.dispatch('order-created', { orderId: e.order.id });
 
-            // Provera tipa stavki u narudžbi
-            let containsFood = false;
-            let containsDrink = false;
-            
-            e.order.order_items.forEach(item => {
-                if (item.item.type === 'food') {
-                    containsFood = true;
-                } else if (item.item.type === 'drink') {
-                    containsDrink = true;
+                let containsFood = false;
+                let containsDrink = false;
+
+                e.order.order_items.forEach(item => {
+                    if (item.item.type === 'food') {
+                        containsFood = true;
+                    } else if (item.item.type === 'drink') {
+                        containsDrink = true;
+                    }
+                });
+
+                if (containsFood) {
+                    let audioFood = new Audio('/audio/beep.mp3');
+                    audioFood.play().catch(error => console.log("Error playing the food sound:", error));
                 }
             });
-
-            // Reprodukovanje zvuka za hranu
-           
-            // Reprodukovanje zvuka za piće
-            if (containsFood) {
-                let audioFood = new Audio('/audio/beep.mp3');
-                audioFood.play().catch(error => console.log("Error playing the food sound:", error));
-            }
-        });
-});
-
+    });
     </script>
 </div>
