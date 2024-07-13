@@ -13,10 +13,7 @@ class Item extends Model
     {
         return $this->hasMany(ItemOption::class);
     }
-    public function category()
-    {
-        return $this->belongsTo(Category::class);
-    }
+
     public function subcategory()
 {
     return $this->belongsTo(Subcategory::class);

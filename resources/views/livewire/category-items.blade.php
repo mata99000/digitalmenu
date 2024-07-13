@@ -1,4 +1,5 @@
 <div>
+    
     <body class="body-2">
 
 
@@ -8,7 +9,7 @@
                     @foreach ($subcategories as $subcategory)
                         <div class="w-layout-blockcontainer container-4 w-container">
                             <h1 class="heading-7">{{ $subcategory->name }}</h1>
-                            
+
                             @foreach ($subcategory->items as $item)
                                 <div class="w-layout-grid grid-4">
                                     <img src="{{ asset('storage/' . $item->image) }}" loading="lazy" id="w-node-_1cdb4422-9e88-8eec-16d3-b17441b597fd-879c8c16" alt="" class="image-2"/>
@@ -26,9 +27,9 @@
                 <p>Category not found.</p>
             @endif
         </div>
-        
-    
-    
+
+
+
     </body>
 
 </div>

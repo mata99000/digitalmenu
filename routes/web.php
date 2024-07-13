@@ -9,16 +9,20 @@ use App\Livewire\CategoryItems;
 use App\Livewire\Test;
 use App\Livewire\OrderForm;
 use App\Livewire\ItemPanel; // Pretpostavljam da je vaš Livewire komponent nazvan ItemPanel
+use App\Livewire\UserOrder;
+use App\Livewire\ItemsByCategory;
 
-Route::get('/kitchen', KitchenOrders::class)->name('kitchen.panel');
-Route::get('/bar', BarOrders::class)->name('bar.panel');
+Route::get('/category/{categoryId}', ItemsByCategory::class);
 
-Route::get('/order', OrderForm::class)->name('order.form')->middleware('waiter');
-Route::get('/test', Test::class);
 
-Route::get('/', function () {
-    return view('categories.index');
-});
+Route::get('/kitchen', KitchenOrders::class)->name('kitchen.panel')->middleware('cook');
+Route::get('/bar', BarOrders::class)->name('bar.panel')->middleware('waiter');
+
+Route::get('/live-order', OrderForm::class)->name('live-order.form')->middleware('waiter');
+
+
+Route::get('/', UserOrder::class)->name('user-order.form');
+
 
 Route::get('/categories/{id}', function ($id) {
     return view('categories.show', ['id' => $id]);

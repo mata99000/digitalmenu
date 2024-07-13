@@ -14,8 +14,9 @@ class Order extends Model
 
     public function waiter()
     {
-        return $this->belongsTo(Waiter::class);  // Pretpostavljajući da postoji model Waiter
+        return $this->belongsTo(User::class, 'waiter_id')->where('role', 'waiter');
     }
+
     public function orderItems()  // Ensure the function name matches the relationship name you are trying to access
     {
         return $this->hasMany(\App\Models\OrderItem::class);

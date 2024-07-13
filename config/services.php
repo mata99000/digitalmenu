@@ -13,7 +13,9 @@ return [
     | a conventional file to locate the various service credentials.
     |
     */
-
+    'https' => [
+    'verify' => false,
+],
     'postmark' => [
         'token' => env('POSTMARK_TOKEN'),
     ],
