@@ -12,7 +12,7 @@ use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Carbon\Carbon;
-
+use Filament\Tables\Actions\ViewAction;
 class OrderResource extends Resource
 {
     protected static ?string $model = Order::class;
@@ -112,8 +112,15 @@ class OrderResource extends Resource
                     ]),
             ])
             ->actions([
-                Tables\Actions\ViewAction::make('view')
-                    ->label('View Order'),
+                ViewAction::make()
+                    ->label('View Order')
+                    ->modalHeading('Order Details')
+                    ->modalButton('Close')
+                    ->modalWidth('xl')
+                    ->modalContent(function ($record) {
+                        $items = $record->items; // Assuming 'items' is the relationship name
+                        return view('components.order-details-modal', ['order' => $record, 'items' => $items]);
+                    }),
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
