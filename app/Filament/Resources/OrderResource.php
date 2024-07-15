@@ -23,14 +23,14 @@ class OrderResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('order_number')
+                Forms\Components\TextInput::make('id')
                     ->required()
                     ->maxLength(255),
                 Forms\Components\Select::make('waiter_id')
                     ->relationship('waiter', 'name')
                     ->searchable()
                     ->required(),
-                Forms\Components\TextInput::make('total_price')
+                Forms\Components\TextInput::make('total')
                     ->required()
                     ->numeric(),
                 Forms\Components\Select::make('status')
@@ -49,7 +49,7 @@ class OrderResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('order_number')
+                TextColumn::make('id')
                     ->label('Order Number'),
                 TextColumn::make('waiter.name')
                     ->label('Waiter')
