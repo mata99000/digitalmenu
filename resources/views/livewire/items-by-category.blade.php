@@ -18,7 +18,7 @@
                             @endfor
                         </div>
                         <div class="price">
-                            <p>${{ $item->price }}</p>
+                            <p>{{ $item->price }} <b>RSD</b></p>
                             <i class="fa-solid fa-plus add-to-cart" data-item-id="{{ $item->id }}"></i>
                         </div>
                     </div>
