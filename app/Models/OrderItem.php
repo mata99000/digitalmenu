@@ -16,6 +16,10 @@ class OrderItem extends Model
         return $this->belongsTo(Order::class);
     }
 
+    public function getTotalPriceAttribute()
+    {
+        return $this->quantity * $this->price;
+    }
     public function item()
     {
         return $this->belongsTo(Item::class);  // Pretpostavljajući da postoji model Item

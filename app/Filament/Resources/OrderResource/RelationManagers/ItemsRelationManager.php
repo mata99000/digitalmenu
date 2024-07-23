@@ -1,60 +1,45 @@
 <?php
 
+// app/Filament/Resources/OrderResource/RelationManagers/ItemsRelationManager.php
 namespace App\Filament\Resources\OrderResource\RelationManagers;
 
-use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Forms;
 use Filament\Tables;
-use Filament\Tables\Table;
-use Filament\Tables\Columns\TextColumn;
+use App\Models\Item;
 
 class ItemsRelationManager extends RelationManager
 {
-    protected static string $relationship = 'items';
+    protected static string $relationship = 'orderedItems';
 
-    protected static ?string $recordTitleAttribute = 'product_name';
-
-    public function form(Form $form): Form
+    public function form(Forms\Form $form): Forms\Form
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('product_name')
+                Forms\Components\Select::make('item_id')
+                    ->relationship('item', 'name')
+                    ->searchable()
                     ->required()
-                    ->maxLength(255),
+                    ->label('Item Name'),
                 Forms\Components\TextInput::make('quantity')
-                    ->required(),
+                    ->required()
+                    ->label('Quantity'),
                 Forms\Components\TextInput::make('price')
-                    ->required(),
+                    ->required()
+                    ->label('Price'),
             ]);
     }
 
-    public function table(Table $table): Table
+    public function table(Tables\Table $table): Tables\Table
     {
         return $table
             ->columns([
-                TextColumn::make('product_name'),
-                TextColumn::make('quantity'),
-                TextColumn::make('price'),
-            ])
-            ->filters([
-                // Dodajte filtere po potrebi
-            ])
-            ->headerActions([
-                Tables\Actions\CreateAction::make(),
-            ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
-            ])
-            ->bulkActions([
-                Tables\Actions\DeleteBulkAction::make(),
+                Tables\Columns\TextColumn::make('item.name')
+                    ->label('Item Name'),
+                Tables\Columns\TextColumn::make('quantity')
+                    ->label('Quantity'),
+                Tables\Columns\TextColumn::make('price')
+                    ->label('Price'),
             ]);
-    }
-
-    public static function getRelations(): array
-    {
-        return [
-            SelectedOptionsRelationManager::class,
-        ];
     }
 }

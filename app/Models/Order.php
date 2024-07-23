@@ -16,7 +16,10 @@ class Order extends Model
     {
         return $this->belongsTo(User::class, 'waiter_id')->where('role', 'waiter');
     }
-
+    public function orderedItems()
+    {
+        return $this->hasMany(OrderItem::class);
+    }
     public function orderItems()  // Ensure the function name matches the relationship name you are trying to access
     {
         return $this->hasMany(\App\Models\OrderItem::class);
