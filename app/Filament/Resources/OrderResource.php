@@ -40,12 +40,12 @@ class OrderResource extends Resource
                     ->options([
                         'completed' => 'Completed',
                         'canceled' => 'Canceled',
-                        'in_progress' => 'In Progress',
+                        'pending' => 'Pending',
                     ])
                     ->required(),
                 Forms\Components\TextInput::make('created_at')
                     ->label('Created At'),
-                Forms\Components\DatePicker::make('deliveried_at')
+                Forms\Components\DatePicker::make('updated_at')
                     ->label('Delivered At'),
                 Forms\Components\Repeater::make('orderedItems')
                     ->relationship('orderedItems')
@@ -84,7 +84,7 @@ class OrderResource extends Resource
                 TextColumn::make('created_at')
                     ->label('Created At')
                     ->formatStateUsing(fn ($state) => Carbon::parse($state)->format('j.n.y \a\t H:i')),
-                TextColumn::make('deliveried_at')
+                TextColumn::make('updated_at')
                     ->label('Delivered At')
                     ->formatStateUsing(fn ($state) => Carbon::parse($state)->format('j.n.y \a\t H:i')),
                 TextColumn::make('duration')
