@@ -10,6 +10,9 @@ use App\Models\ItemOption;
 use App\Models\OptionPrice;
 use App\Events\OrderCreated;
 use App\Models\OrderItemOption;
+use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
+use Mike42\Escpos\Printer;
+
 
 class OrderForm extends Component
 {
@@ -228,9 +231,125 @@ class OrderForm extends Component
         }
         $this->reset('selectedItems');
         $this->initSelectedItems();
+        $this->printReceipt($order);
         session()->flash('message', 'Order successfully submitted!');
     }
+    private function printReceipt($order)
+    {
+        try {
+            // Connect to the printer
+            $connector = new WindowsPrintConnector("smb://DESKTOP-9EJSBKM/BIXOLON");
+            $printer = new Printer($connector);
 
+            // Print Header
+            $printer->setJustification(Printer::JUSTIFY_CENTER);
+            $printer->setTextSize(2, 2);
+            $printer->text("Company Name\n");
+            $printer->setTextSize(1, 1);
+            $printer->text("Address Line 1\n");
+            $printer->text("Address Line 2\n");
+            $printer->text("Phone: (000) 000-0000\n");
+            $printer->text(str_repeat("-", 42) . "\n"); // Adjusted line width for 80mm
+            $printer->setTextSize(2, 2);
+            $printer->text("Order Receipt\n");
+            $printer->setTextSize(1, 1);
+            $printer->text(str_repeat("-", 42) . "\n"); // Adjusted line width for 80mm
+
+            // Print Items Header
+            $printer->setJustification(Printer::JUSTIFY_LEFT);
+            $printer->text($this->formatLine("Item", "Qty", "Unit", 42));
+            $printer->text(str_repeat("-", 42) . "\n"); // Adjusted line width for 80mm
+
+            // Print Items
+            foreach ($order->orderItems as $item) {
+                $wrappedItemName = $this->wrapText($item->item->name, 28); // Adjusted for wider width
+                $unitPrice = number_format($item->item->price, 2);
+                $quantity = $item->quantity;
+                $totalPrice = number_format($quantity * $item->item->price, 2);
+
+                // Print item name
+                $printer->text($wrappedItemName[0] . "\n");
+                if (isset($wrappedItemName[1])) {
+                    $printer->text($wrappedItemName[1] . "\n");
+                } else {
+                    $printer->text("\n"); // Add an empty line if item name is only one line
+                }
+
+                // Print quantity and unit price
+                $printer->text($this->formatLine("", $quantity, $unitPrice, 42));
+
+                // Print total price for the item
+                $printer->text($this->formatTotalLine("= $totalPrice", 42));
+
+                // Print options if any
+                if (!empty($item->selectedOptions)) {
+                    foreach ($item->selectedOptions as $optionId) {
+                        $option = ItemOption::find($optionId);
+                        $optionName = $this->fitTextToWidth("+ {$option->name}", 38);
+                        $printer->text("   {$optionName}\n");
+                    }
+                }
+
+                // Print separator line between items
+                $printer->text(str_repeat("-", 42) . "\n"); // Adjusted line width for 80mm
+            }
+
+            // Print Total
+            $printer->text(str_repeat("-", 42) . "\n"); // Adjusted line width for 80mm
+            $printer->setJustification(Printer::JUSTIFY_CENTER);
+            $printer->text("Total: " . number_format($order->total, 2) . "\n");
+            $printer->text(str_repeat("-", 42) . "\n"); // Adjusted line width for 80mm
+
+            // Print Footer
+            $printer->setJustification(Printer::JUSTIFY_CENTER);
+            $printer->text("Thank you for your purchase!\n");
+            $printer->text("Visit us again!\n");
+
+            // Cut the paper
+            $printer->cut();
+
+            // Close the connection
+            $printer->close();
+        } catch (\Exception $e) {
+            // Handle errors
+            session()->flash('error', 'Error printing receipt: ' . $e->getMessage());
+        }
+    }
+
+    private function formatLine($leftText, $centerText1, $centerText2, $lineWidth = 42)
+    {
+        $leftWidth = 20;
+        $centerWidth = 10;
+        $rightWidth = $lineWidth - $leftWidth - $centerWidth;
+
+        $leftText = str_pad($leftText, $leftWidth);
+        $centerText1 = str_pad($centerText1, $centerWidth, ' ', STR_PAD_BOTH);
+        $centerText2 = str_pad($centerText2, $rightWidth, ' ', STR_PAD_LEFT);
+
+        return $leftText . $centerText1 . $centerText2 . "\n";
+    }
+
+    private function formatTotalLine($rightText, $lineWidth = 42)
+    {
+        $rightWidth = $lineWidth;
+        $rightText = str_pad($rightText, $rightWidth, ' ', STR_PAD_LEFT);
+
+        return $rightText . "\n";
+    }
+
+    private function wrapText($text, $maxLength)
+    {
+        $wrappedText = wordwrap($text, $maxLength, "\n", true);
+        return explode("\n", $wrappedText);
+    }
+
+    private function fitTextToWidth($text, $maxLength)
+    {
+        if (strlen($text) > $maxLength) {
+            return substr($text, 0, $maxLength - 1) . '…';
+        }
+        return str_pad($text, $maxLength);
+    }
     public function render()
     {
         return view('livewire.order-form')->layout('layouts.order');
