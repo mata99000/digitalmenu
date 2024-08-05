@@ -231,7 +231,7 @@ class OrderForm extends Component
         }
         $this->reset('selectedItems');
         $this->initSelectedItems();
-        $this->printReceipt($order);
+        //$this->printReceipt($order);
         session()->flash('message', 'Order successfully submitted!');
     }
     private function printReceipt($order)
