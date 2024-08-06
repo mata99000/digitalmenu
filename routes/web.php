@@ -15,7 +15,10 @@ use App\Livewire\ItemsByCategory;
 Route::get('/category/{categoryId}', ItemsByCategory::class);
 
 
-Route::get('/kitchen', KitchenOrders::class)->name('kitchen.panel')->middleware('cook');
+Route::get('/kitchen', function () {
+    return view('kitchen-portal');
+})->name('kitchen.portal');
+
 Route::get('/bar', BarOrders::class)->name('bar.panel')->middleware('waiter');
 
 Route::get('/live-order', OrderForm::class)->name('live-order.form')->middleware('waiter');

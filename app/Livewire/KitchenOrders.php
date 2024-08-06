@@ -8,14 +8,16 @@ use App\Models\OrderItem;
 use App\Models\Item;
 use App\Events\OrderUpdated;
 use Livewire\Attributes\On;
+use Carbon\Carbon;
 
 class KitchenOrders extends Component
 {
     public $orders = [];
-
+    public $totalPrice = 0;
     public function mount()
     {
         $this->loadOrders();
+        $this->calculateTotalPrice();
     }
 
     #[On('order-updated')]
@@ -28,16 +30,17 @@ class KitchenOrders extends Component
 
     #[On('order-created')]
     public function loadOrders()
-    {
-        $this->orders = Order::where('status', 'pending')
-            ->orderBy('created_at', 'desc')
-            ->with(['orderItems' => function ($query) {
-                $query->whereHas('item', function ($q) {
-                    $q->where('type', 'food');
-                });
-            }, 'orderItems.item', 'orderItems.orderItemOptions.option'])
-            ->get();
-    }
+{
+    $this->orders = Order::where('status', 'pending')
+        ->orderBy('created_at', 'desc')
+        ->with([
+            'orderItems' => function ($query) {
+                $query->with(['item', 'orderItemOptions.option']);
+            }
+        ])
+        ->get();
+}
+
 
     public function orderCreated(Order $order)
     {
@@ -68,6 +71,23 @@ class KitchenOrders extends Component
         }
     }
 
+    public function calculateTotalPrice()
+    {
+        $today = Carbon::today();
+        $this->totalPrice = Order::whereDate('created_at', $today)
+            ->with(['orderItems' => function ($query) {
+                $query->whereHas('item', function ($q) {
+                    $q->where('type', 'food');
+                });
+            }, 'orderItems.item'])
+            ->get()
+            ->reduce(function ($carry, $order) {
+                return $carry + $order->orderItems->reduce(function ($sum, $item) {
+                    return $sum + ($item->item->price * $item->quantity);
+                }, 0);
+            }, 0);
+    }
+
     public function completeOrder($orderId)
     {
         $order = Order::find($orderId);
@@ -78,11 +98,15 @@ class KitchenOrders extends Component
             broadcast(new OrderUpdated($order->toArray()));
             $this->dispatch('orderUpdated', $orderId);
             $this->loadOrders();
+            $this->calculateTotalPrice(); // Ažuriranje cene nakon promene statusa
         }
     }
 
     public function render()
     {
-        return view('livewire.kitchen-orders', ['orders' => $this->orders])->layout('layouts.kitchen');
+        return view('livewire.kitchen-orders', [
+            'orders' => $this->orders,
+            'totalPrice' => $this->totalPrice,
+        ])->layout('layouts.kitchen');
     }
 }
