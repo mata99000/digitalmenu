@@ -52,7 +52,7 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'https://laravel.local'),
+    'url' => env('APP_URL', 'http://digitalmenu.test'),
 
     /*
     |--------------------------------------------------------------------------
